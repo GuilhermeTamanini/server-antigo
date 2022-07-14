@@ -3,39 +3,35 @@ import axios from "axios"
 export default {
   data() {
     return {
-      novo_livro: "",
+      novo_nome: "",
       nova_categoria: "",
       novo_autor: "",
       novo_preco: "",
       nova_editora: "",
-      capa_traz: "",
-      capa_frente: "",
-      cadastros: [],
+      livros: [],
     };
   },
   async created() {
-    const cadastros = await axios.get("http://localhost:4000/cadastros");
-    this.cadastros = cadastros.data;
+    const livros = await axios.get("http://localhost:4000/livros");
+    this.livros = livros.data;
   },
   methods: {
     async salvar() {
-      const cadastro ={
-          nome: this.novo_livro,
+      const livro ={
+          nome: this.novo_nome,
           categoria: this.nova_categoria,
           autor: this.novo_autor,
           preco: this.novo_preco,
           editora: this.nova_editora,
-          traz: this.capa_traz,
-          frente: this.capa_frente,
+      }
+      const livro_criado = await axios.post("http://localhost:4000/livros", livro);
+      this.livros.push(livro_criado.data);
+      this.novo_nome = "";
       },
-      const cadastro_criado = await axios.post("http://localhost:4000/cadastros", cadastro);
-      this.cadastros.push(cadastro_criado.data);
-      this.novo_cadastro = "";
-      },
-    async excluir(cadastro) {
-      await axios.delete(`http://localhost:4000/cadastros/${cadastro.id}`)
-      const indice = this.cadastros.indexOf(cadastro);
-      this.cadastros.splice(indice, 1);
+    async excluir(livro) {
+      await axios.delete(`http://localhost:4000/livros/${livro.id}`)
+      const indice = this.livros.indexOf(livro);
+      this.livros.splice(indice, 1);
     },
   },
 };
@@ -47,8 +43,8 @@ export default {
   <div class="form-input">
     <input
       type="text"
-      placeholder="Insira o nome dos livros"
-      v-model="novo_livro"
+      placeholder="Insira o nome dos nomes"
+      v-model="novo_nome"
     />
     <select
       class="form-select"
@@ -80,44 +76,30 @@ export default {
       <option value="Editora 2">Editora2</option>
       <option value="Editora 3">Editora3</option>
     </select>
-    <input type="text" placeholder="Insira o preço" v-model="novo_preco" />
-    <input
-      type="text"
-      placeholder="Insira a imagem da capa da frente"
-      v-model="capa_frente"
-    />
-    <input
-      type="img"
-      placeholder="Insira a imagem da capa de traz"
-      v-model="capa_traz"
-    />
+    <input type="number" placeholder="Insira o preço" v-model="novo_preco" />
     <button @click="salvar">salvar</button>
   </div>
   <div class="list-items">
     <table class="table table-striped">
       <thead>
         <tr>
-          <th scope="col">Livro</th>
+          <th scope="col">nome</th>
           <th scope="col">Categoria</th>
           <th scope="col">Autor</th>
           <th scope="col">Editora</th>
           <th scope="col">Preço</th>
-          <th scope="col">Img traz</th>
-          <th scope="col">Img da frente</th>
           <th id="excluir" scope="col">Excluir</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="cadastro in cadastros" :key="cadastro.id">
-          <td>{{ cadastro.nome }}</td>
-          <td>{{ cadastro.categoria }}</td>
-          <td>{{ cadastro.autor }}</td>
-          <td>{{ cadastro.editora }}</td>
-          <td>{{ cadastro.preco }}</td>
-          <td>{{ cadastro.traz }}</td>
-          <td>{{ cadastro.frente }}</td>
+        <tr v-for="livro in livros" :key="livro.id">
+          <td>{{ livro.nome }}</td>
+          <td>{{ livro.categoria }}</td>
+          <td>{{ livro.autor }}</td>
+          <td>{{ livro.editora }}</td>
+          <td>R${{ livro.preco }}</td>
           <td>
-            <button @click="excluir(cadastro)">Excluir</button>
+            <button @click="excluir(livro)">Excluir</button>
           </td>
         </tr>
       </tbody>

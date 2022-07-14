@@ -1,5 +1,14 @@
 {
-  "cadastros":[],
-  "editoras":[],
-  "categorias":[]
+  "livros": [
+    {
+      "nome": "dnwahdugawudga",
+      "categoria": "",
+      "autor": "",
+      "preco": "",
+      "editora": "",
+      "id": 1
+    }
+  ],
+  "editoras": [],
+  "categorias": []
 }
