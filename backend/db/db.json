@@ -1,14 +1,6 @@
 {
-  "livros": [
-    {
-      "nome": "dnwahdugawudga",
-      "categoria": "",
-      "autor": "",
-      "preco": "",
-      "editora": "",
-      "id": 1
-    }
-  ],
+  "livros": [],
   "editoras": [],
-  "categorias": []
+  "categorias": [],
+  "autores": []
 }

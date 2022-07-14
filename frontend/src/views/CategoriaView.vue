@@ -1,33 +1,31 @@
 <script>
-import { v4 as uuid } from "uuid";
+import axios from "axios"
 export default {
   data() {
     return {
-      novas_categorias: "",
+      nova_categoria: "",
       nova_descricao: "",
-      cadastros: [
-        {
-          categorias:"Jefferson",
-          descricao:"huehuehuheuheuheuheuhe",
-        },
-      ],
+      categorias: [],
     };
   },
+  async created (){
+    const categorias = await axios.get("https://localhost:4000/categorias");
+    this.categorias = categorias.data;
+  },
   methods: {
-    salvar() {
-      if (this.novo_cadastro !== "") {
-        const novo_id = uuid();
-        this.cadastros.push({
-          id: novo_id,
-          categorias: this.novas_categorias,
-          descricao: this.nova_descricao,
-        });
-        this.novas_categorias = "";
-      }
+    async salvar() {
+     const categoria ={
+      nome: this.nova_categoria,
+      descricao: this.nova_descricao,
+     }
+     const categoria_criada = await axios.post("http://localhost:4000/categorias/", categoria)
+     this.categorias.push(categoria_criada.data);
+     this.nova_categoria = "";
     },
-    excluir(cadastro) {
-      const indice = this.cadastros.indexOf(cadastro);
-      this.cadastros.splice(indice, 1);
+    async excluir(categoria) {
+      await axios.delete(`http://localhost:4000/categorias/${categoria.id}`)
+      const indice = this.categorias.indexOf(categoria);
+      this.categorias.splice(indice, 1);
     },
   },
 };
@@ -40,7 +38,7 @@ export default {
     <input
       type="text"
       placeholder="Nome da categoria"
-      v-model="novas_categorias"
+      v-model="nova_categoria"
     />
     <input type="text" placeholder="descrição" v-model="nova_descricao">
     <button @click="salvar">salvar</button>
@@ -56,12 +54,12 @@ export default {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="cadastro in cadastros" :key="cadastro.id">
-          <!-- <td scope="row">{{ cadastro.id }}</td> -->
-          <td>{{ cadastro.categorias }}</td>
-          <td> {{ cadastro.descricao }}</td>
+        <tr v-for="categoria in categorias" :key="categoria.id">
+          <!-- <td scope="row">{{ categoria.id }}</td> -->
+          <td>{{ categoria.nome }}</td>
+          <td> {{ categoria.descricao }}</td>
           <td>
-            <button @click="excluir(cadastro)">Excluir</button>
+            <button @click="excluir(categoria)">Excluir</button>
           </td>
         </tr>
       </tbody>

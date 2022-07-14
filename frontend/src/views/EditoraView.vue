@@ -4,30 +4,25 @@ export default {
   data() {
     return {
       nova_editora: "",
-      editoras: [
-        {
-          editoras:"Jefferson"
-        },
-      ],
+      editoras: [],
     };
   },
   async created() {
     const editoras = await axios.get("http://localhost:4000/editoras");
     this.editoras = editoras.data;
-  }
+  },
   methods: {
-    salvar() {
-      if (this.novo_cadastro !== "") {
-        const novo_id = uuid();
-        this.editoras.push({
-          id: novo_id,
-          editoras: this.nova_editora,
-        });
-        this.nova_editora = "";
+    async salvar() {
+      const editora ={
+        nome: this.nova_editora,
       }
+      const editora_criada = await axios.post("http://localhost:4000/editoras/", editora)
+      this.editoras.push(editora_criada.data);
+      this.nova_editora = "";
     },
-    excluir(cadastro) {
-      const indice = this.editoras.indexOf(cadastro);
+    async excluir(editora) {
+      await axios.delete(`http://localhost:4000/editoras/${editora.id}`)
+      const indice = this.editoras.indexOf(editora);
       this.editoras.splice(indice, 1);
     },
   },
@@ -55,11 +50,11 @@ export default {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="cadastro in editoras" :key="cadastro.id">
-          <!-- <td scope="row">{{ cadastro.id }}</td> -->
-          <td>{{ cadastro.editoras }}</td>
+        <tr v-for="editora in editoras" :key="editora.id">
+          <!-- <td scope="row">{{ editora.id }}</td> -->
+          <td>{{ editora.nome }}</td>
           <td>
-            <button @click="excluir(cadastro)">Excluir</button>
+            <button @click="excluir(editora)">Excluir</button>
           </td>
         </tr>
       </tbody>

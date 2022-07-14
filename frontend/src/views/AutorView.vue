@@ -1,30 +1,29 @@
 <script>
-import { v4 as uuid } from "uuid";
+import axios from "axios"
 export default {
   data() {
     return {
-      novo_autor: "",
-      cadastros: [
-        {
-          autor: "Thomas",
-        },
-      ],
+      novo_nome: "",
+      autores: [],
     };
   },
+  async created(){
+    const autores = await axios.get("http://localhost:4000/autores/");
+    this.autores = autores.data;
+  },
   methods: {
-    salvar() {
-      if (this.novo_cadastro !== "") {
-        const novo_id = uuid();
-        this.cadastros.push({
-          id: novo_id,
-          autor: this.novo_autor,
-        });
-        this.novo_autor = "";
+    async salvar() {
+      const autor ={
+        nome: this.novo_nome,
       }
+      const autor_criado = await axios.post("http://localhost:4000/autores/", autor)
+      this.autores.push(autor_criado.data);
+      this.novo_autor = "";
     },
-    excluir(cadastro) {
-      const indice = this.cadastros.indexOf(cadastro);
-      this.cadastros.splice(indice, 1);
+    async excluir(autor) {
+      await axios.delete(`http://localhost:4000/autores/${autor.id}`)
+      const indice = this.autores.indexOf(autor);
+      this.autores.splice(indice, 1);
     },
   },
 };
@@ -34,7 +33,7 @@ export default {
     <div class="title"></div>
   </div>
   <div class="form-input">
-    <input type="text" placeholder="Nome do autor" v-model="novo_autor" />
+    <input type="text" placeholder="Nome do nome" v-model="novo_nome" />
     <button @click="salvar">salvar</button>
   </div>
   <div class="list-items">
@@ -42,16 +41,16 @@ export default {
       <thead>
         <tr>
           <!-- <th scope="col">ID</th> -->
-          <th scope="col">autor</th>
+          <th scope="col">nome</th>
           <th id="excluir-editora" scope="col">Excluir</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="cadastro in cadastros" :key="cadastro.id">
-          <!-- <td scope="row">{{ cadastro.id }}</td> -->
-          <td>{{ cadastro.autor }}</td>
+        <tr v-for="autor in autores" :key="autor.id">
+          <!-- <td scope="row">{{ autor.id }}</td> -->
+          <td>{{ autor.nome }}</td>
           <td>
-            <button @click="excluir(cadastro)">Excluir</button>
+            <button @click="excluir(autor)">Excluir</button>
           </td>
         </tr>
       </tbody>
