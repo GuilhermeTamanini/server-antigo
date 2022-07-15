@@ -1,6 +1,53 @@
 {
-  "livros": [],
-  "editoras": [],
-  "categorias": [],
-  "autores": []
+  "livros": [
+    {
+      "nome": "Surauruaruahw",
+      "categoria": "Categoria2",
+      "autor": "Autor",
+      "preco": 8988967566857,
+      "editora": "Editora 3",
+      "id": 1
+    }
+  ],
+  "editoras": [
+    {
+      "nome": "Jefferson",
+      "id": 1
+    },
+    {
+      "nome": "Omg",
+      "id": 2
+    },
+    {
+      "id": 3
+    },
+    {
+      "id": 4
+    },
+    {
+      "id": 5
+    },
+    {
+      "nome": "dwlhfugfiwagf",
+      "id": 6
+    }
+  ],
+  "categorias": [
+    {
+      "nome": "Aventura",
+      "descricao": "Ínvrivel",
+      "id": 1
+    },
+    {
+      "nome": "UUWHFYWYUGFAFaf",
+      "descricao": "",
+      "id": 2
+    }
+  ],
+  "autores": [
+    {
+      "nome": "Douglas",
+      "id": 1
+    }
+  ]
 }

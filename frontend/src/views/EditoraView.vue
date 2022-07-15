@@ -1,31 +1,34 @@
 <script>
-import axios from "axios"
+import EditorasApi from "@/api/editoras.js"
+const editorasApi = new EditorasApi();
 export default {
   data() {
     return {
-      nova_editora: "",
+      editora: {},
       editoras: [],
     };
   },
   async created() {
-    const editoras = await axios.get("http://localhost:4000/editoras");
-    this.editoras = editoras.data;
+     this.editoras = await editorasApi.buscarTodasAsEditoras();
   },
   methods: {
     async salvar() {
-      const editora ={
-        nome: this.nova_editora,
+      if (this.editora.id) {
+        await editorasApi.atualizarEditora(this.editora);
+      } else {
+        await editorasApi.adicionarEditora(this.editora);
       }
-      const editora_criada = await axios.post("http://localhost:4000/editoras/", editora)
-      this.editoras.push(editora_criada.data);
-      this.nova_editora = "";
-    },
-    async excluir(editora) {
-      await axios.delete(`http://localhost:4000/editoras/${editora.id}`)
-      const indice = this.editoras.indexOf(editora);
-      this.editoras.splice(indice, 1);
-    },
+      this.editoras = await editorasApi.buscarTodasAsEditoras();
+      this.editora = {};
   },
+  async excluit(editora) {
+    await editorasApi.exluirEditora(editora.id);
+    this.editoras = await editorasApi.buscarTodasAsEditoras();
+  },
+  editar(editora) {
+    Object.assign(this.editora, editora);
+  },
+},
 };
 </script>
 <template>
@@ -36,7 +39,8 @@ export default {
     <input
       type="text"
       placeholder="Nome da editora"
-      v-model="nova_editora"
+      v-model="editora.nome"
+      @keyup.enter="salvar"
     />
     <button @click="salvar">salvar</button>
   </div>
@@ -44,17 +48,16 @@ export default {
     <table id="table-editora" class="table table-striped">
       <thead>
         <tr>
-          <!-- <th scope="col">ID</th> -->
           <th scope="col">Editoras</th>
-          <th id="excluir-editora" scope="col">Excluir</th>
+          <th id="excluir-editora" scope="col">Acões</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="editora in editoras" :key="editora.id">
-          <!-- <td scope="row">{{ editora.id }}</td> -->
-          <td>{{ editora.nome }}</td>
+          <td>{% raw %}{{ editora.nome }}{% endraw %}</td>
           <td>
             <button @click="excluir(editora)">Excluir</button>
+            <button @click="editar(editora)">Editar</button>
           </td>
         </tr>
       </tbody>

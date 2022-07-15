@@ -43,7 +43,7 @@ export default {
   <div class="form-input">
     <input
       type="text"
-      placeholder="Insira o nome dos nomes"
+      placeholder="Insira o nome"
       v-model="novo_nome"
     />
     <select
@@ -83,7 +83,7 @@ export default {
     <table class="table table-striped">
       <thead>
         <tr>
-          <th scope="col">nome</th>
+          <th scope="col">Nome</th>
           <th scope="col">Categoria</th>
           <th scope="col">Autor</th>
           <th scope="col">Editora</th>
